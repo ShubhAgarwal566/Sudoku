@@ -10,91 +10,96 @@
 import random
 
 def solve(board):
-    cell = find_empty(board)
-    if not cell:
-        return True
-    else:
-        row, col = cell
+	cell = find_empty(board)
+	if not cell:
+		return True
+	else:
+		row, col = cell
 
-    for num in range(1,10):
-        if valid(board, num, (row, col)):
-            board[row][col] = num
+	for num in range(1,10):
+		if valid(board, num, (row, col)):
+			board[row][col] = num
 
-            if solve(board):
-                return True
+			if solve(board):
+				return True
 
-            board[row][col] = 0
+			board[row][col] = 0
 
-    return False
+	return False
 
 
 def valid(board, num, pos):
-    if num == 0 :
-        return None
-    # Check row
-    for i in range(len(board[0])):
-        if board[pos[0]][i] == num and pos[1] != i:
-            return False
+	if num == 0 :
+		return None
+	# Check row
+	for i in range(len(board[0])):
+		if board[pos[0]][i] == num and pos[1] != i:
+			return False
 
-    # Check column
-    for i in range(len(board)):
-        if board[i][pos[1]] == num and pos[0] != i:
-            return False
+	# Check column
+	for i in range(len(board)):
+		if board[i][pos[1]] == num and pos[0] != i:
+			return False
 
-    # Check box
-    cell_i = pos[1] // 3
-    cell_j = pos[0] // 3
+	# Check box
+	cell_i = pos[1] // 3
+	cell_j = pos[0] // 3
 
-    for i in range(cell_j*3, cell_j*3 + 3):
-        for j in range(cell_i * 3, cell_i*3 + 3):
-            if board[i][j] == num and (i,j) != pos:
-                return False
+	for i in range(cell_j*3, cell_j*3 + 3):
+		for j in range(cell_i * 3, cell_i*3 + 3):
+			if board[i][j] == num and (i,j) != pos:
+				return False
 
-    return True
+	return True
 
 
 def find_empty(board):
-    for i in range(len(board)):
-        for j in range(len(board[0])):
-            if board[i][j] == 0:
-                return (i, j)  # row, col
+	for i in range(len(board)):
+		for j in range(len(board[0])):
+			if board[i][j] == 0:
+				return (i, j)  # row, col
 
-    return None
+	return None
 
 #level is an int in [0,1,2]
 def random_grid(level) :
-    L = [[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],
-                            [0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0]]
+	L = [[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],
+							[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0]]
 
-    #fill in diagonal blocks
-    for k in [0, 3, 6] :
-        fill = range(1, 10, 1)
-        for i in range(k, k + 3) :
-            for j in range(k, k + 3) :
-                num = fill[random.randrange(0, len(fill), 1)]
-                L[i][j] = num
-                fill.remove(num)
+	#fill in diagonal blocks
+	for k in [0, 3, 6] :
+		fill = range(1, 10, 1)
+		for i in range(k, k + 3) :
+			for j in range(k, k + 3) :
+				num = fill[random.randrange(0, len(fill), 1)]
+				L[i][j] = num
+				fill.remove(num)
 
-    #solve
-    solve(L) #L is a solved puzzle
-    A = [[],[],[],[],[],[],[],[],[]]
-    for row in range(9) :
-        for col in range(9) :
-            A[row].append(L[row][col])
-    #number of cells to be vacated
-    vacate = [25, 40, 60]
+	#solve
+	solve(L) #L is a solved puzzle
+	A = [[],[],[],[],[],[],[],[],[]]
+	for row in range(9) :
+		for col in range(9) :
+			A[row].append(L[row][col])
+	#number of cells to be vacated
+	vacate = [25, 40, 60]
 
-    for loop in range(vacate[level]) :
-        #choosing a random cell
-        i, j = int(9 * random.random()), int(9 * random.random())
-        #check if it has been vacated already
-        while L[i][j] == 0 :
-            i, j = int(9 * random.random()), int(9 * random.random())
-        
-        #empty the cell
-        L[i][j] = 0 
-        
-    return A,L 
+	for loop in range(vacate[level]) :
+		#choosing a random cell
+		i, j = int(9 * random.random()), int(9 * random.random())
+		#check if it has been vacated already
+		while L[i][j] == 0 :
+			i, j = int(9 * random.random()), int(9 * random.random())
+		
+		#empty the cell
+		L[i][j] = 0 
+		
+	return A,L 
 
-
-
+def empty_left(grid):
+	count = 0
+	for i in range(9):
+		for j in range(9):
+			if(grid[i][j]==0):
+				count+=1
+	return count
