@@ -134,13 +134,10 @@ class Grid :
 	
 	#making a selection (and deselecting others) - selects only changeable keys        
 	def selection(self,row, col) :
-		flag = False
-		if self.cell_list[row][col].selected :
-			flag = True
 		for i in range(9) :
 			for j in range(9) :
 				self.cell_list[i][j].selected = False
-		if self.cell_list[row][col].changeable and not flag:
+		if self.cell_list[row][col].changeable:
 			self.cell_list[row][col].selected = True
 			self.selected = row, col
 		else :
@@ -296,6 +293,49 @@ def PLAY(win) :
 						run = True
 				#if user presses a key                     
 				elif event.type == KEYDOWN and not exit:
+					# conditions for keyboard shortcuts
+					if(event.key == pygame.K_r):
+						rough = not(rough)
+					elif(event.key == pygame.K_s):
+						print("solve")
+						pass
+
+					# conditions for arrow keys
+					if(event.key == pygame.K_UP):
+						temp_row = row
+						for i in range(row-1, -1, -1):
+							if(board.cell_list[i][col].changeable):
+								temp_row = i
+								break
+						row = temp_row
+						board.selection(row, col)
+					elif(event.key == pygame.K_DOWN):
+						temp_row = row
+						for i in range(row+1, 9):
+							if(board.cell_list[i][col].changeable):
+								temp_row = i
+								break
+						row = temp_row
+						board.selection(row, col)
+					elif(event.key == pygame.K_RIGHT):
+						temp_col = col
+						for i in range(col+1, 9):
+							if(board.cell_list[row][i].changeable):
+								temp_col = i
+								break
+						col = temp_col
+						board.selection(row, col)
+					elif(event.key == pygame.K_LEFT):
+						temp_col = col
+						for i in range(col-1, -1, -1):
+							if(board.cell_list[row][i].changeable):
+								temp_col = i
+								break
+						col = temp_col
+						board.selection(row, col)
+
+					# conditions for numbers
+					key = None
 					if event.key in [pygame.K_1, pygame.K_KP1]:
 						key = 1
 					elif event.key in [pygame.K_2, pygame.K_KP2]:
@@ -319,7 +359,7 @@ def PLAY(win) :
 						key = 0
 
 					#if some box has been selected prior to hitting key
-					if board.selected != None :
+					if board.selected != None and key!=None :
 						if board.cell_list[board.selected[0]][board.selected[1]].changeable:
 							if(rough==False):
 								board.cell_list[row][col].val = key
@@ -336,40 +376,7 @@ def PLAY(win) :
 									board.cell_list[row][col].rough_vals[key] = not(board.cell_list[row][col].rough_vals[key])
 							board.draw_board(win)
 					
-					#following conditions are for arrow keys
-						if(event.key == pygame.K_UP):
-							temp_row = row
-							for i in range(row-1, -1, -1):
-								if(board.cell_list[i][col].changeable):
-									temp_row = i
-									break
-							row = temp_row
-							board.selection(row, col)
-						elif(event.key == pygame.K_DOWN):
-							temp_row = row
-							for i in range(row+1, 9):
-								if(board.cell_list[i][col].changeable):
-									temp_row = i
-									break
-							row = temp_row
-							board.selection(row, col)
-						elif(event.key == pygame.K_RIGHT):
-							temp_col = col
-							for i in range(col+1, 9):
-								if(board.cell_list[row][i].changeable):
-									temp_col = i
-									break
-							col = temp_col
-							board.selection(row, col)
-						elif(event.key == pygame.K_LEFT):
-							temp_col = col
-							for i in range(col-1, -1, -1):
-								if(board.cell_list[row][i].changeable):
-									temp_col = i
-									break
-							col = temp_col
-							board.selection(row, col)
-
+					
 				#check if the puzzle is completed 
 				if(funcs.empty_left(board.vals)==0):
 					result = check(board)
