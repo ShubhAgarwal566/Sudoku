@@ -14,6 +14,7 @@ class Cell :
 		self.col = col
 		self.selected = False
 		self.changeable = True
+		self.color = (0,0,255)
 		self.val = 0
 		self.rough_vals = {1:False, 2:False, 3:False, 4:False, 5:False, 6:False, 7:False, 8:False, 9:False}
 	#dual purpose - setting values and highlighting border if selected  
@@ -109,7 +110,7 @@ class Grid :
 				self.vals[row][col] = self.puzzle[1][row][col]
 				if not self.cell_list[row][col].val == 0 :
 					#preset values are unselectable and unchangeable
-					self.cell_list[row][col].changeable = False         
+					self.cell_list[row][col].changeable = False
 	
 	#redraws table and its contents    
 	def draw_board(self, win):
@@ -129,16 +130,24 @@ class Grid :
 		for i in range(9) :
 			for j in range(9) :
 				if self.cell_list[i][j].selected :
-					pygame.draw.rect(win, (255,0,0), (j*60,i*60,60,60), 3)
+					pygame.draw.rect(win, self.cell_list[i][j].color, (j*60,i*60,60,60), 3)
 					
-	
+	def first_selection(self):
+		for i in range(9):
+			for j in range(9):
+				if self.cell_list[i][j].changeable:
+					self.cell_list[i][j].selected = True
+					self.selected = i, j
+					return i,j
+
 	#making a selection (and deselecting others) - selects only changeable keys        
-	def selection(self,row, col) :
+	def selection(self,row, col, color=(0,0,255)) :
 		for i in range(9) :
 			for j in range(9) :
 				self.cell_list[i][j].selected = False
 		if self.cell_list[row][col].changeable:
 			self.cell_list[row][col].selected = True
+			self.cell_list[row][col].color = color
 			self.selected = row, col
 		else :
 			self.selected = None
@@ -175,6 +184,29 @@ def format_time(secs):
 
 	timer = hour + ":" + minute + ":" + sec
 	return timer
+
+def solve(board, win, puzzle):
+	cell = funcs.find_empty(puzzle)
+	if not cell:
+		return True
+	else:
+		row, col = cell
+
+	for num in range(1,10):
+		if funcs.valid(puzzle, num, (row, col)):
+			puzzle[row][col] = num
+			board.cell_list[row][col].val = num
+			board.selection(row,col)
+			time.sleep(.3) #shubh
+			board.draw_board(win)
+			pygame.display.update()
+			if solve(board, win, puzzle):
+				return True
+
+			puzzle[row][col] = 0
+
+	return False
+
 
 #My Function callable in main        
 def PLAY(win) :
@@ -233,6 +265,7 @@ def PLAY(win) :
 		#clear window contents to construct Sudoku grid
 		win.fill((255,255,255))
 		board = Grid(level) 
+		org_board = board
 		exit = False
 		back = False
 		rough = False
@@ -244,6 +277,7 @@ def PLAY(win) :
 				print(row)
 			print
 			print
+		row, col = board.first_selection()
 		while gamerun :
 			if not exit :
 				board.draw_board(win) 
@@ -266,8 +300,10 @@ def PLAY(win) :
 				if board.selected != None :
 					if funcs.valid(board.vals, board.vals[board.selected[0]][board.selected[1]], board.selected) == False:
 						win.blit(lstyle.render("X", 1, (255,0,0)), (320, 560))
+						board.selection(row,col,(255,0,0))
 					elif funcs.valid(board.vals, board.vals[board.selected[0]][board.selected[1]], board.selected) == True:
 						win.blit(lstyle.render("V", 1, (0,255,0)), (320, 560))
+						board.selection(row,col,(0,255,0))
 				pygame.display.update()
 			for event in pygame.event.get() :
 				#if quit is detected
@@ -283,7 +319,7 @@ def PLAY(win) :
 						board.selection(row, col)
 					#if user clicks on "Solve"
 					elif x > 60 and x < 150 and y > 540 and y < 600:
-						pass
+						solve(board.org_puzzle)
 					#user clicks onn rough
 					elif( x > 150 and x < 300 and 540<y<600):
 						rough = not rough
@@ -297,8 +333,8 @@ def PLAY(win) :
 					if(event.key == pygame.K_r):
 						rough = not(rough)
 					elif(event.key == pygame.K_s):
-						print("solve")
-						pass
+						board = org_board
+						solve(board, win, board.puzzle[1]) #shubh
 
 					# conditions for arrow keys
 					if(event.key == pygame.K_UP):
