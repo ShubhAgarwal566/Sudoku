@@ -20,5 +20,6 @@ Note: The base code for this project is taken from [here](https://github.com/B2-
 * Only tested on Ubuntu 18.04
 
 ### How to run
-```git clone https://github.com/ShubhAgarwal566/Sudoku.git
-python main.py```
+`git clone https://github.com/ShubhAgarwal566/Sudoku.git`
+
+`python main.py`
