@@ -22,4 +22,6 @@ Note: The base code for this project is taken from [here](https://github.com/B2-
 ### How to run
 `git clone https://github.com/ShubhAgarwal566/Sudoku.git`
 
+`cd Sudoku`
+
 `python main.py`
