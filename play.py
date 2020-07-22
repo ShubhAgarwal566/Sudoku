@@ -108,7 +108,7 @@ class Grid :
 			for col in range(9) :
 				self.cell_list[row][col].val = self.puzzle[1][row][col]
 				self.vals[row][col] = self.puzzle[1][row][col]
-				if not self.cell_list[row][col].val == 0 :
+				if( not self.cell_list[row][col].val == 0 ):
 					#preset values are unselectable and unchangeable
 					self.cell_list[row][col].changeable = False
 	
@@ -121,7 +121,7 @@ class Grid :
 		# Draw Grid Lines
 		gap = self.width / 9
 		for i in range(10):
-			if i % 3 == 0 and i != 0:
+			if( i % 3 == 0 and i != 0 ):
 				thick = 4
 			else:
 				thick = 1
@@ -129,13 +129,13 @@ class Grid :
 			pygame.draw.line(win, (0,0,0), (i*gap, 0), (i*gap, self.height), thick)
 		for i in range(9) :
 			for j in range(9) :
-				if self.cell_list[i][j].selected :
+				if( self.cell_list[i][j].selected ):
 					pygame.draw.rect(win, self.cell_list[i][j].color, (j*60,i*60,60,60), 3)
 					
 	def first_selection(self):
 		for i in range(9):
 			for j in range(9):
-				if self.cell_list[i][j].changeable:
+				if( self.cell_list[i][j].changeable ):
 					self.cell_list[i][j].selected = True
 					self.selected = i, j
 					return i,j
@@ -145,7 +145,7 @@ class Grid :
 		for i in range(9) :
 			for j in range(9) :
 				self.cell_list[i][j].selected = False
-		if self.cell_list[row][col].changeable:
+		if( self.cell_list[row][col].changeable ):
 			self.cell_list[row][col].selected = True
 			self.cell_list[row][col].color = color
 			self.selected = row, col
@@ -154,7 +154,7 @@ class Grid :
 	
 	#to determine selected cell, given position of cursor  (not generalised for the rest of the board)  
 	def click_loc(self, pos) :
-		if pos[0] < self.width and pos[1] < self.height :
+		if( pos[0] < self.width and pos[1] < self.height ):
 			return pos[1] // 60, pos[0] // 60   
 		else : 
 			return None
@@ -164,12 +164,12 @@ class Grid :
 def check(board) :   
 	for i in range(9) :
 		for j in range(9) :
-			if board.cell_list[i][j].val == 0 :
+			if( board.cell_list[i][j].val == 0 ):
 				return None
 	#sudoku matrix 
 	for i in range(9) :
 		for j in range(9) :
-			if  not funcs.valid(board.vals, board.vals[i][j], (i, j)) :
+			if(  not funcs.valid(board.vals, board.vals[i][j], (i, j)) ):
 				return False
 	return True
 
@@ -187,20 +187,20 @@ def format_time(secs):
 
 def solve(board, win, puzzle):
 	cell = funcs.find_empty(puzzle)
-	if not cell:
+	if( not cell):
 		return True
 	else:
 		row, col = cell
 
 	for num in range(1,10):
-		if funcs.valid(puzzle, num, (row, col)):
+		if( funcs.valid(puzzle, num, (row, col))):
 			puzzle[row][col] = num
 			board.cell_list[row][col].val = num
 			board.selection(row,col)
 			time.sleep(.2)
 			board.draw_board(win)
 			pygame.display.update()
-			if solve(board, win, puzzle):
+			if( solve(board, win, puzzle)):
 				return True
 
 			puzzle[row][col] = 0
@@ -244,7 +244,7 @@ def PLAY(win) :
 					pygame.quit()
 					sys.exit()         
 				#detecting the mouseclick and checking which button was selected (and breaking out from 2 loops)
-				elif event.type == MOUSEBUTTONDOWN :
+				elif( event.type == MOUSEBUTTONDOWN ):
 					x, y = pygame.mouse.get_pos()
 					if( x > 200 and x < 400 and y > 200):
 						if( y < 250 ):
@@ -279,7 +279,7 @@ def PLAY(win) :
 			print
 		row, col = board.first_selection()
 		while gamerun :
-			if not exit :
+			if( not exit ):
 				board.draw_board(win) 
 				pygame.draw.rect(win, (150,150,150), (0, 544, 300, 60))
 				style = pygame.font.SysFont("comicsans", 40)
@@ -297,11 +297,11 @@ def PLAY(win) :
 				timer = int(time.time() - start)
 				lstyle = pygame.font.SysFont("comicsans", 40)
 				win.blit(lstyle.render(format_time(timer), 1, (0,0,0)), (400, 560))
-				if board.selected != None :
-					if funcs.valid(board.vals, board.vals[board.selected[0]][board.selected[1]], board.selected) == False:
+				if( board.selected != None ):
+					if( funcs.valid(board.vals, board.vals[board.selected[0]][board.selected[1]], board.selected) == False):
 						win.blit(lstyle.render("X", 1, (255,0,0)), (320, 560))
 						board.selection(row,col,(255,0,0))
-					elif funcs.valid(board.vals, board.vals[board.selected[0]][board.selected[1]], board.selected) == True:
+					elif( funcs.valid(board.vals, board.vals[board.selected[0]][board.selected[1]], board.selected) == True):
 						win.blit(lstyle.render("V", 1, (0,255,0)), (320, 560))
 						board.selection(row,col,(0,255,0))
 				pygame.display.update()
@@ -311,14 +311,14 @@ def PLAY(win) :
 					pygame.quit()
 					sys.exit()
 				#if user clicks on screen
-				elif event.type == MOUSEBUTTONDOWN and not exit:
+				elif( event.type == MOUSEBUTTONDOWN and not exit):
 					x, y = pygame.mouse.get_pos()
 					#if user clicks somewhere on the grid
-					if not board.click_loc((x,y)) == None :
+					if( not board.click_loc((x,y)) == None ):
 						row, col =  board.click_loc((x,y))
 						board.selection(row, col)
 					#if user clicks on "Solve"
-					elif x > 60 and x < 150 and y > 540 and y < 600:
+					elif( x > 60 and x < 150 and y > 540 and y < 600 ):
 						board = org_board
 						solve(board, win, board.puzzle[1])
 						time.sleep(2)
@@ -332,23 +332,23 @@ def PLAY(win) :
 						pygame.display.update()
 						while True :
 							for event in pygame.event.get() :
-								if event.type == QUIT or (event.type==KEYDOWN and event.key==K_ESCAPE):
+								if( event.type == QUIT or (event.type==KEYDOWN and event.key==K_ESCAPE) ):
 									pygame.quit()
 									sys.exit()
-								elif event.type == MOUSEBUTTONDOWN : # click on re button
+								elif( event.type == MOUSEBUTTONDOWN ): # click on re button
 									x, y = pygame.mouse.get_pos()
-									if x > 200 and x < 264 and y > 400 and y < 464 :
+									if( x > 200 and x < 264 and y > 400 and y < 464 ):
 										return
 
 					#user clicks onn rough
 					elif( x > 150 and x < 300 and 540<y<600):
 						rough = not rough
 					#user clicks on back
-					elif x > 0 and x < 50 and y > 560 and y < 600:
+					elif( x > 0 and x < 50 and y > 560 and y < 600 ):
 						gamerun = False 
 						run = True
 				#if user presses a key                     
-				elif event.type == KEYDOWN and not exit:
+				elif( event.type == KEYDOWN and not exit ):
 					# conditions for keyboard shortcuts
 					if(event.key == pygame.K_r):
 						rough = not(rough)
@@ -366,12 +366,12 @@ def PLAY(win) :
 						pygame.display.update()
 						while True :
 							for event in pygame.event.get() :
-								if event.type == QUIT or (event.type==KEYDOWN and event.key==K_ESCAPE):
+								if( event.type == QUIT or (event.type==KEYDOWN and event.key==K_ESCAPE) ):
 									pygame.quit()
 									sys.exit()
-								elif event.type == MOUSEBUTTONDOWN : # click on re button
+								elif( event.type == MOUSEBUTTONDOWN ): # click on re button
 									x, y = pygame.mouse.get_pos()
-									if x > 200 and x < 264 and y > 400 and y < 464 :
+									if (x > 230 and x < 294 and y > 400 and y < 464 ):
 										return
 
 					# conditions for arrow keys
@@ -410,31 +410,31 @@ def PLAY(win) :
 
 					# conditions for numbers
 					key = None
-					if event.key in [pygame.K_1, pygame.K_KP1]:
+					if(event.key in [pygame.K_1, pygame.K_KP1]):
 						key = 1
-					elif event.key in [pygame.K_2, pygame.K_KP2]:
+					elif(event.key in [pygame.K_2, pygame.K_KP2]):
 						key = 2
-					elif event.key in [pygame.K_3, pygame.K_KP3]:
+					elif(event.key in [pygame.K_3, pygame.K_KP3]):
 						key = 3
-					elif event.key in [pygame.K_4, pygame.K_KP4]:
+					elif(event.key in [pygame.K_4, pygame.K_KP4]):
 						key = 4
-					elif event.key in [pygame.K_5, pygame.K_KP5]:
+					elif(event.key in [pygame.K_5, pygame.K_KP5]):
 						key = 5
-					elif event.key in [pygame.K_6, pygame.K_KP6]:
+					elif(event.key in [pygame.K_6, pygame.K_KP6]):
 						key = 6
-					elif event.key in [pygame.K_7, pygame.K_KP7]:
+					elif(event.key in [pygame.K_7, pygame.K_KP7]):
 						key = 7
-					elif event.key in [pygame.K_8, pygame.K_KP8]:
+					elif(event.key in [pygame.K_8, pygame.K_KP8]):
 						key = 8
-					elif event.key in [pygame.K_9, pygame.K_KP9]:
+					elif(event.key in [pygame.K_9, pygame.K_KP9]):
 						key = 9
 					#offers delete feature    
-					elif event.key in [pygame.K_DELETE, pygame.K_BACKSPACE, pygame.K_0, pygame.K_KP0] : 
+					elif(event.key in [pygame.K_DELETE, pygame.K_BACKSPACE, pygame.K_0, pygame.K_KP0]): 
 						key = 0
 
 					#if some box has been selected prior to hitting key
-					if board.selected != None and key!=None :
-						if board.cell_list[board.selected[0]][board.selected[1]].changeable:
+					if(board.selected != None and key!=None):
+						if(board.cell_list[board.selected[0]][board.selected[1]].changeable):
 							if(rough==False):
 								board.cell_list[row][col].val = key
 								board.vals[row][col] = key
@@ -455,7 +455,7 @@ def PLAY(win) :
 				#check if the puzzle is completed 
 				if(funcs.empty_left(board.vals)==0):
 					result = check(board)
-					if result :
+					if(result):
 						text = "Solved in %s" % (format_time(timer))
 						color = (0,255,0)
 						win.fill((255,255,255))
@@ -466,12 +466,12 @@ def PLAY(win) :
 						pygame.display.update()
 						while True :
 							for event in pygame.event.get() :
-								if event.type == QUIT or (event.type==KEYDOWN and event.key==K_ESCAPE):
+								if( event.type == QUIT or (event.type==KEYDOWN and event.key==K_ESCAPE) ):
 									pygame.quit()
 									sys.exit()
-								elif event.type == MOUSEBUTTONDOWN : # click on re button
+								elif(event.type == MOUSEBUTTONDOWN): # click on re button
 									x, y = pygame.mouse.get_pos()
-									if x > 200 and x < 264 and y > 400 and y < 464 :
+									if(x > 230 and x < 294 and y > 400 and y < 464):
 										return
 				pygame.display.update()
 			 

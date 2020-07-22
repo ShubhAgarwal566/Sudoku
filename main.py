@@ -36,7 +36,7 @@ if __name__ == "__main__" :
 			if(event.type == QUIT or (event.type==KEYDOWN and event.key==K_ESCAPE)):
 				pygame.quit()
 				sys.exit()
-			elif event.type == MOUSEBUTTONDOWN :
+			elif(event.type == MOUSEBUTTONDOWN):
 				x, y = pygame.mouse.get_pos()
 				if(x>width//2-100 and x<width//2+100 and y>300 and y<350):
 					play.PLAY(win)

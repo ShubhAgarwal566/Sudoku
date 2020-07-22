@@ -68,7 +68,7 @@ def random_grid(level) :
 
 	#fill in diagonal blocks
 	for k in [0, 3, 6] :
-		fill = range(1, 10, 1)
+		fill = [i for i in range(1, 10) ]
 		for i in range(k, k + 3) :
 			for j in range(k, k + 3) :
 				num = fill[random.randrange(0, len(fill), 1)]
