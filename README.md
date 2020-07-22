@@ -1,7 +1,7 @@
 # SUDOKU
 Note: The base code for this project is taken from [here](https://github.com/B2-Stealth/PYGAME-SUDOKU-.git). 
 
-### Added Features
+### New Features
 * Added feature which solves puzzle in realtime _(good visualization of backtrack)_
 * Added feature for Rough Work
 * Autochecks the puzzle on completion
@@ -22,6 +22,6 @@ Note: The base code for this project is taken from [here](https://github.com/B2-
 ### How to run
 `git clone https://github.com/ShubhAgarwal566/Sudoku.git`
 
-`cd Sudoku`
+`cd Sudoku/`
 
 `python main.py`
