@@ -197,7 +197,7 @@ def solve(board, win, puzzle):
 			puzzle[row][col] = num
 			board.cell_list[row][col].val = num
 			board.selection(row,col)
-			time.sleep(.3) #shubh
+			time.sleep(.2)
 			board.draw_board(win)
 			pygame.display.update()
 			if solve(board, win, puzzle):
@@ -319,7 +319,27 @@ def PLAY(win) :
 						board.selection(row, col)
 					#if user clicks on "Solve"
 					elif x > 60 and x < 150 and y > 540 and y < 600:
-						solve(board.org_puzzle)
+						board = org_board
+						solve(board, win, board.puzzle[1])
+						time.sleep(2)
+						text = "Solved!!"
+						color = (0,255,0)
+						win.fill((255,255,255))
+						fnt = pygame.font.SysFont("comicsans", 50)
+						txt = fnt.render(text, True, color)
+						win.blit(txt, (200, 300))
+						win.blit(re, (210, 400))
+						pygame.display.update()
+						while True :
+							for event in pygame.event.get() :
+								if event.type == QUIT or (event.type==KEYDOWN and event.key==K_ESCAPE):
+									pygame.quit()
+									sys.exit()
+								elif event.type == MOUSEBUTTONDOWN : # click on re button
+									x, y = pygame.mouse.get_pos()
+									if x > 200 and x < 264 and y > 400 and y < 464 :
+										return
+
 					#user clicks onn rough
 					elif( x > 150 and x < 300 and 540<y<600):
 						rough = not rough
@@ -335,6 +355,24 @@ def PLAY(win) :
 					elif(event.key == pygame.K_s):
 						board = org_board
 						solve(board, win, board.puzzle[1]) #shubh
+						time.sleep(2)
+						text = "Solved!!"
+						color = (0,255,0)
+						win.fill((255,255,255))
+						fnt = pygame.font.SysFont("comicsans", 50)
+						txt = fnt.render(text, True, color)
+						win.blit(txt, (200, 300))
+						win.blit(re, (230, 400))
+						pygame.display.update()
+						while True :
+							for event in pygame.event.get() :
+								if event.type == QUIT or (event.type==KEYDOWN and event.key==K_ESCAPE):
+									pygame.quit()
+									sys.exit()
+								elif event.type == MOUSEBUTTONDOWN : # click on re button
+									x, y = pygame.mouse.get_pos()
+									if x > 200 and x < 264 and y > 400 and y < 464 :
+										return
 
 					# conditions for arrow keys
 					if(event.key == pygame.K_UP):
@@ -404,6 +442,7 @@ def PLAY(win) :
 										board.cell_list[row][col].rough_vals[i] = False
 							else:
 								board.cell_list[row][col].val = 0
+								board.cell_list[row][col].color = (0,0,255)
 								board.vals[row][col] = 0
 								if(key==0): #removing all the rough_vals
 									for i in range(1,10):
@@ -422,8 +461,8 @@ def PLAY(win) :
 						win.fill((255,255,255))
 						fnt = pygame.font.SysFont("comicsans", 50)
 						txt = fnt.render(text, True, color)
-						win.blit(txt, (130, 300))
-						win.blit(re, (200, 400))
+						win.blit(txt, (120, 300))
+						win.blit(re, (230, 400))
 						pygame.display.update()
 						while True :
 							for event in pygame.event.get() :
