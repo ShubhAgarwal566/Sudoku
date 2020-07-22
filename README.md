@@ -1,5 +1,5 @@
 # SUDOKU
-Note: The base code for this project is taken from [here].(https://github.com/B2-Stealth/PYGAME-SUDOKU-.git) 
+Note: The base code for this project is taken from [here](https://github.com/B2-Stealth/PYGAME-SUDOKU-.git). 
 
 ### Added Features
 * Added feature which solves puzzle in realtime _(good visualization of backtrack)_
@@ -20,5 +20,5 @@ Note: The base code for this project is taken from [here].(https://github.com/B2
 * Only tested on Ubuntu 18.04
 
 ### How to run
-`git clone https://github.com/ShubhAgarwal566/Sudoku.git`
-`python main.py`
+```git clone https://github.com/ShubhAgarwal566/Sudoku.git
+python main.py```
