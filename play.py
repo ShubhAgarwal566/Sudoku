@@ -294,30 +294,30 @@ def PLAY(win) :
 					elif x > 0 and x < 50 and y > 560 and y < 600:
 						gamerun = False 
 						run = True
-
 				#if user presses a key                     
 				elif event.type == KEYDOWN and not exit:
-					if event.key == pygame.K_1:
+					if event.key in [pygame.K_1, pygame.K_KP1]:
 						key = 1
-					elif event.key == pygame.K_2:
+					elif event.key in [pygame.K_2, pygame.K_KP2]:
 						key = 2
-					elif event.key == pygame.K_3:
+					elif event.key in [pygame.K_3, pygame.K_KP3]:
 						key = 3
-					elif event.key == pygame.K_4:
+					elif event.key in [pygame.K_4, pygame.K_KP4]:
 						key = 4
-					elif event.key == pygame.K_5:
+					elif event.key in [pygame.K_5, pygame.K_KP5]:
 						key = 5
-					elif event.key == pygame.K_6:
+					elif event.key in [pygame.K_6, pygame.K_KP6]:
 						key = 6
-					elif event.key == pygame.K_7:
+					elif event.key in [pygame.K_7, pygame.K_KP7]:
 						key = 7
-					elif event.key == pygame.K_8:
+					elif event.key in [pygame.K_8, pygame.K_KP8]:
 						key = 8
-					elif event.key == pygame.K_9:
+					elif event.key in [pygame.K_9, pygame.K_KP9]:
 						key = 9
 					#offers delete feature    
-					elif event.key in [pygame.K_DELETE, pygame.K_BACKSPACE, pygame.K_0] : 
+					elif event.key in [pygame.K_DELETE, pygame.K_BACKSPACE, pygame.K_0, pygame.K_KP0] : 
 						key = 0
+
 					#if some box has been selected prior to hitting key
 					if board.selected != None :
 						if board.cell_list[board.selected[0]][board.selected[1]].changeable:
@@ -335,6 +335,41 @@ def PLAY(win) :
 								else: #toggling rough val
 									board.cell_list[row][col].rough_vals[key] = not(board.cell_list[row][col].rough_vals[key])
 							board.draw_board(win)
+					
+					#following conditions are for arrow keys
+						if(event.key == pygame.K_UP):
+							temp_row = row
+							for i in range(row-1, -1, -1):
+								if(board.cell_list[i][col].changeable):
+									temp_row = i
+									break
+							row = temp_row
+							board.selection(row, col)
+						elif(event.key == pygame.K_DOWN):
+							temp_row = row
+							for i in range(row+1, 9):
+								if(board.cell_list[i][col].changeable):
+									temp_row = i
+									break
+							row = temp_row
+							board.selection(row, col)
+						elif(event.key == pygame.K_RIGHT):
+							temp_col = col
+							for i in range(col+1, 9):
+								if(board.cell_list[row][i].changeable):
+									temp_col = i
+									break
+							col = temp_col
+							board.selection(row, col)
+						elif(event.key == pygame.K_LEFT):
+							temp_col = col
+							for i in range(col-1, -1, -1):
+								if(board.cell_list[row][i].changeable):
+									temp_col = i
+									break
+							col = temp_col
+							board.selection(row, col)
+
 				#check if the puzzle is completed 
 				if(funcs.empty_left(board.vals)==0):
 					result = check(board)
