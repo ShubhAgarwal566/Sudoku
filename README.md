@@ -4,7 +4,7 @@ Note: The base code for this project is taken from [here](https://github.com/B2-
 ### New Features
 * Added feature which solves puzzle in realtime _(good visualization of backtrack)_
 * Added feature for Rough Work
-* Added feature for comparision with the solution
+* Added feature for comparision _(Compare current values against solution)_
 * Autochecks the puzzle on completion
 * Added support for python3
 * Support for Keypad/Numberpad added
