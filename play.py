@@ -212,7 +212,7 @@ def solve(board, win, puzzle):
 			board.cell_list[row][col].val = num
 			board.selection(row,col)
 			time.sleep(.2)
-			board.draw_board(win, compare)
+			board.draw_board(win, False)
 			pygame.display.update()
 			if( solve(board, win, puzzle)):
 				return True
@@ -394,7 +394,7 @@ def PLAY(win) :
 						run = True
 					elif(event.key == pygame.K_s):
 						board = org_board
-						solve(board, win, board.puzzle[1]) #shubh
+						solve(board, win, board.puzzle[1])
 						time.sleep(2)
 						text = "Solved!!"
 						color = (0,255,0)
