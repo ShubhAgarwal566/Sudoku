@@ -41,7 +41,9 @@ if __name__ == "__main__" :
 				if(x>width//2-100 and x<width//2+100 and y>300 and y<350):
 					play.PLAY(win)
 					win.fill((255, 255, 255))
-					
+			elif(event.type == KEYDOWN and event.key in [K_p, K_RETURN]):
+				play.PLAY(win)
+				win.fill((255, 255, 255))
 				
 		pygame.display.update()
 		

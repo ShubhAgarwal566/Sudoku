@@ -9,10 +9,16 @@ Note: The base code for this project is taken from [here].(https://github.com/B2
 * Support for Keypad/Numberpad added
 * Boundary color of selected cell changes according to input _(Reg, Green, Blue)_
 * Keyboard shotcuts added
+	* Enter/P to start
 	* Esc to exit
+	* E for Easy
+	* M for Medium
+	* H for Hard
 	* R to enable Rough Work
 	* S to Solve
 	* Arrow keys to Navigate
+	* Backspace to go back
+	* R or Backspace to restart game
 
 ### Requirements
 * Python 2.7.x  or Python 3.6.x

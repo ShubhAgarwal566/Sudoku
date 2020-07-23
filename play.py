@@ -261,6 +261,21 @@ def PLAY(win) :
 							break
 					elif( x > 0 and x < 50 and y > 560 and y < 600): # back button pressed
 						return
+				elif( event.type == KEYDOWN ):
+					if(event.key in [K_b, K_BACKSPACE] ):
+						return
+					elif(event.key == K_e):
+						level = 0
+						run = False
+						break
+					elif(event.key == K_m):
+						level = 1
+						run = False
+						break
+					elif(event.key == K_h):
+						level = 2
+						run = False
+						break
 
 		#clear window contents to construct Sudoku grid
 		win.fill((255,255,255))
@@ -335,10 +350,12 @@ def PLAY(win) :
 								if( event.type == QUIT or (event.type==KEYDOWN and event.key==K_ESCAPE) ):
 									pygame.quit()
 									sys.exit()
-								elif( event.type == MOUSEBUTTONDOWN ): # click on re button
+								elif( event.type == MOUSEBUTTONDOWN ): # click on re 
 									x, y = pygame.mouse.get_pos()
 									if( x > 200 and x < 264 and y > 400 and y < 464 ):
 										return
+								elif( event.type == KEYDOWN and event.key in [K_r, K_BACKSPACE, K_RETURN]):
+									return
 
 					#user clicks onn rough
 					elif( x > 150 and x < 300 and 540<y<600):
@@ -352,6 +369,9 @@ def PLAY(win) :
 					# conditions for keyboard shortcuts
 					if(event.key == pygame.K_r):
 						rough = not(rough)
+					elif(event.key in [K_b, K_BACKSPACE]):
+						gamerun = False 
+						run = True
 					elif(event.key == pygame.K_s):
 						board = org_board
 						solve(board, win, board.puzzle[1]) #shubh
@@ -373,6 +393,8 @@ def PLAY(win) :
 									x, y = pygame.mouse.get_pos()
 									if (x > 230 and x < 294 and y > 400 and y < 464 ):
 										return
+								elif( event.type == KEYDOWN and event.key in [K_r, K_BACKSPACE, K_RETURN]):
+									return
 
 					# conditions for arrow keys
 					if(event.key == pygame.K_UP):
