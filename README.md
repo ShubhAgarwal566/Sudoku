@@ -4,6 +4,7 @@ Note: The base code for this project is taken from [here].(https://github.com/B2
 ### Added Features
 * Added feature which solves puzzle in realtime _(good visualization of backtrack)_
 * Added feature for Rough Work
+* Added feature for comparision with the solution
 * Autochecks the puzzle on completion
 * Added support for python3
 * Support for Keypad/Numberpad added
@@ -16,6 +17,7 @@ Note: The base code for this project is taken from [here].(https://github.com/B2
 	* H for Hard
 	* R to enable Rough Work
 	* S to Solve
+	* C to Compare with Solution
 	* Arrow keys to Navigate
 	* Backspace to go back
 	* R or Backspace to restart game

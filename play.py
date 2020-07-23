@@ -18,7 +18,7 @@ class Cell :
 		self.val = 0
 		self.rough_vals = {1:False, 2:False, 3:False, 4:False, 5:False, 6:False, 7:False, 8:False, 9:False}
 	#dual purpose - setting values and highlighting border if selected  
-	def draw_cell(self, win) :        
+	def draw_cell(self, win, compare, value) :        
 		fnt = pygame.font.SysFont("comicsans", 40)
 		fnt2 = pygame.font.SysFont("comicsans", 20)
 
@@ -27,11 +27,34 @@ class Cell :
 		y = self.row * gap
 
 		if not self.changeable: 
+												  # left, top, width, height
 			pygame.draw.rect(win, (128,128,128), (x,y,gap,gap), 0) 
-			
-		if self.changeable :
-			pygame.draw.rect(win, (255,255,255), (x,y,gap,gap), 0) 
+			text = fnt.render(str(self.val), 1, (0, 0, 0))
+			win.blit(text, (x + 20, y + 20))
 		
+		if self.changeable :
+			if(compare == False or (compare==True and self.val == value)):
+				pygame.draw.rect(win, (255,255,255), (x,y,gap,gap), 0)
+				if(self.val!=0):
+					text = fnt.render(str(self.val), 1, (0, 0, 0))
+					win.blit(text, (x + 20, y + 20))
+		
+			else: #Compare = True and value != self.val
+				pygame.draw.polygon(win, (227, 97, 61), [[x,y], [x+gap,y], [x,y+gap]], 0) #red triangle 
+				pygame.draw.polygon(win, (164, 250, 137), [[x+gap,y+gap], [x+gap,y], [x,y+gap]], 0) # green triangle
+				if self.val!=0 : win.blit(fnt2.render(str(self.val), 1, (0, 0, 0)), (x + 10, y + 10)) #current ans
+				win.blit(fnt2.render(str(value), 1, (0, 0, 0)), (x + 40, y + 40)) # desired ans
+
+			row1, row2, row3 = self.get_row()
+			if(not(row1==row2==row3==" "*11)):
+				pygame.draw.rect(win, (255,255,255), (x,y,gap,gap), 0)
+				win.blit(fnt2.render(str(row1), 1, (50, 50, 50)), (x + 2, y + 2))
+				win.blit(fnt2.render(str(row2), 1, (50, 50, 50)), (x + 2, y + 22))
+				win.blit(fnt2.render(str(row3), 1, (50, 50, 50)), (x + 2, y + 42))
+
+
+			
+	def get_row(self):
 		row1 = ""
 		if(self.rough_vals[1]==True):
 			row1+="1"
@@ -78,18 +101,8 @@ class Cell :
 		if(self.rough_vals[9]==True):
 			row3+="9"
 		else:
-			row3+=" "			
-
-		win.blit(fnt2.render(str(row1), 1, (50, 50, 50)), (x + 2, y + 2))
-		win.blit(fnt2.render(str(row2), 1, (50, 50, 50)), (x + 2, y + 22))
-		win.blit(fnt2.render(str(row3), 1, (50, 50, 50)), (x + 2, y + 42))
-
-
-		if  self.val != 0:
-			text = fnt.render(str(self.val), 1, (0, 0, 0))
-			win.blit(text, (x + 20, y + 20))
-			
-
+			row3+=" "		
+		return row1, row2, row3
 
 class Grid :
 	def __init__(self, level): 
@@ -113,11 +126,11 @@ class Grid :
 					self.cell_list[row][col].changeable = False
 	
 	#redraws table and its contents    
-	def draw_board(self, win):
+	def draw_board(self, win, compare):
 		#draw cells
 		for i in range(9) :
 			for j in range(9) :
-				self.cell_list[i][j].draw_cell(win)
+				self.cell_list[i][j].draw_cell(win, compare, self.puzzle[0][i][j])
 		# Draw Grid Lines
 		gap = self.width / 9
 		for i in range(10):
@@ -131,7 +144,8 @@ class Grid :
 			for j in range(9) :
 				if( self.cell_list[i][j].selected ):
 					pygame.draw.rect(win, self.cell_list[i][j].color, (j*60,i*60,60,60), 3)
-					
+
+
 	def first_selection(self):
 		for i in range(9):
 			for j in range(9):
@@ -198,7 +212,7 @@ def solve(board, win, puzzle):
 			board.cell_list[row][col].val = num
 			board.selection(row,col)
 			time.sleep(.2)
-			board.draw_board(win)
+			board.draw_board(win, compare)
 			pygame.display.update()
 			if( solve(board, win, puzzle)):
 				return True
@@ -284,6 +298,7 @@ def PLAY(win) :
 		exit = False
 		back = False
 		rough = False
+		compare = False
 		start = time.time()
 		timer = 0
 		#print solution in terminal in readable format to make evaluation easier
@@ -295,29 +310,28 @@ def PLAY(win) :
 		row, col = board.first_selection()
 		while gamerun :
 			if( not exit ):
-				board.draw_board(win) 
-				pygame.draw.rect(win, (150,150,150), (0, 544, 300, 60))
+				board.draw_board(win, compare) 
+				pygame.draw.rect(win, (150,150,150), (0, 600, 300, 60))
 				style = pygame.font.SysFont("comicsans", 40)
+				win.blit(img, (0, 550))
 				win.blit(style.render("Solve", 0, (0, 0, 0)), (70,560))
 				if(rough==True):
-					win.blit(style.render("Rough", 0, (255, 0, 0)), (180,560))
+					win.blit(style.render("Rough", 0, (255, 0, 0)), (165,560))
 				else:
-					win.blit(style.render("Rough", 0, (0, 0, 0)), (180,560))
-				win.blit(img, (0, 550))
+					win.blit(style.render("Rough", 0, (0, 0, 0)), (165,560))
+				win.blit(style.render("Comp", 0, (0,0,0)), (270,560))
 				pygame.draw.line(win, (0,0,0), (60,540), (60,600), 4) # start of solve
 				pygame.draw.line(win, (0,0,0), (150,540), (150,600), 4) # end of solve button 
-				pygame.draw.rect(win,(255,255,255), (300,560,300,55),0)
-				pygame.draw.line(win, (0,0,0), (300,540), (300,600), 4) # begin of eval block
-				pygame.draw.line(win, (0,0,0), (360,540), (360,600), 4) # end of eval block
+				pygame.draw.rect(win,(255,255,255), (400,560,300,55),0) # mask over the timer
+				pygame.draw.line(win, (0,0,0), (260,540), (260,600), 4) # begin of compare block
+				pygame.draw.line(win, (0,0,0), (360,540), (360,600), 4) # end of compare block
 				timer = int(time.time() - start)
 				lstyle = pygame.font.SysFont("comicsans", 40)
 				win.blit(lstyle.render(format_time(timer), 1, (0,0,0)), (400, 560))
 				if( board.selected != None ):
 					if( funcs.valid(board.vals, board.vals[board.selected[0]][board.selected[1]], board.selected) == False):
-						win.blit(lstyle.render("X", 1, (255,0,0)), (320, 560))
 						board.selection(row,col,(255,0,0))
 					elif( funcs.valid(board.vals, board.vals[board.selected[0]][board.selected[1]], board.selected) == True):
-						win.blit(lstyle.render("V", 1, (0,255,0)), (320, 560))
 						board.selection(row,col,(0,255,0))
 				pygame.display.update()
 			for event in pygame.event.get() :
@@ -325,6 +339,7 @@ def PLAY(win) :
 				if( event.type == QUIT or (event.type==KEYDOWN and event.key==K_ESCAPE)):
 					pygame.quit()
 					sys.exit()
+
 				#if user clicks on screen
 				elif( event.type == MOUSEBUTTONDOWN and not exit):
 					x, y = pygame.mouse.get_pos()
@@ -332,6 +347,10 @@ def PLAY(win) :
 					if( not board.click_loc((x,y)) == None ):
 						row, col =  board.click_loc((x,y))
 						board.selection(row, col)
+					#user clicks on back
+					elif( x > 0 and x < 50 and y > 560 and y < 600 ):
+						gamerun = False 
+						run = True
 					#if user clicks on "Solve"
 					elif( x > 60 and x < 150 and y > 540 and y < 600 ):
 						board = org_board
@@ -356,20 +375,21 @@ def PLAY(win) :
 										return
 								elif( event.type == KEYDOWN and event.key in [K_r, K_BACKSPACE, K_RETURN]):
 									return
-
-					#user clicks onn rough
-					elif( x > 150 and x < 300 and 540<y<600):
+					#user clicks on rough
+					elif( x > 150 and x < 260 and 540<y<600):
 						rough = not rough
-					#user clicks on back
-					elif( x > 0 and x < 50 and y > 560 and y < 600 ):
-						gamerun = False 
-						run = True
+					#user click on Compare
+					elif( x > 260 and x < 360 and y > 540 and y < 600 ):
+						compare = not compare
+					
 				#if user presses a key                     
 				elif( event.type == KEYDOWN and not exit ):
 					# conditions for keyboard shortcuts
 					if(event.key == pygame.K_r):
 						rough = not(rough)
-					elif(event.key in [K_b, K_BACKSPACE]):
+					elif(event.key == K_c):
+						compare = not compare
+					elif(event.key == K_b):
 						gamerun = False 
 						run = True
 					elif(event.key == pygame.K_s):
@@ -471,7 +491,7 @@ def PLAY(win) :
 										board.cell_list[row][col].rough_vals[i] = False	
 								else: #toggling rough val
 									board.cell_list[row][col].rough_vals[key] = not(board.cell_list[row][col].rough_vals[key])
-							board.draw_board(win)
+							board.draw_board(win, compare)
 					
 					
 				#check if the puzzle is completed 
