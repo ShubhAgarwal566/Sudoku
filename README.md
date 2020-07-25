@@ -1,4 +1,7 @@
 # SUDOKU
+Recreation of popular SUDOKU puzzle with python (pygame). Helpful in visualizing how backtrack works in real life. Always FUN to play.
+
+
 Note: The base code for this project is taken from [here](https://github.com/B2-Stealth/PYGAME-SUDOKU-.git). 
 
 ### New Features
